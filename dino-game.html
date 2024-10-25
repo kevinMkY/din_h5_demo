@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恐龙跳跃游戏</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            width: 600px;
+            height: 200px;
+            border: 1px solid #000;
+            position: relative;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        #dino {
+            width: 30pt; /* 增加恐龙尺寸以便更容易看到 */
+            height: 30pt;
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+        }
+        #dino img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .cactus {
+            width: 40pt;
+            height: 40pt;
+            position: absolute;
+            bottom: 10px;
+            right: 0;
+        }
+        .cactus img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+        }
+        #ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 10px;
+            background-color: #8B4513;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="dino">
+            <img src="din1.webp" alt="Dinosaur">
+        </div>
+        <div id="ground"></div>
+        <div id="score">0</div>
+    </div>
+    <script src="dino-game.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频背景与游戏页面</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        #video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            object-fit: cover;
+            opacity: 1; /* 设置视频透明度为100% */
+        }
+        #game-area {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .game-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 0 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+        }
+        .game-button img {
+            width: 50px;  /* 调整这个值来改变图片大小 */
+            height: auto;
+            margin-bottom: 5px;
+        }
+        .game-button span {
+            font: size 14px;
+        }
+    </style>
+</head>
+<body>
+    <video id="video-background" autoplay loop muted>
+        <source src="/Users/ykh/code/h5/code1/1.mp4" type="video/webm">
+        您的浏览器不支持视频标签。
+    </video>
+    <div id="game-area">
+        <a href="dino-game.html" class="game-button">
+            <img src="/Users/ykh/code/h5/code1/din.webp">
+            <span>恐龙跳跃</span>
+        </a>
+    </div>
+
+    <script>
+        // 如果需要添加任何JavaScript功能，可以在这里编写
+    </script>
+</body>
+</html>
