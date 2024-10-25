@@ -11,6 +11,11 @@ const initialJumpVelocity = 12;
 let score = 0;
 let gameSpeed = 42; // 原来是60，加快30%
 let gameLoop;
+let gameOver = false;
+
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+let animationId;
 
 function jump() {
     if (jumpCount < 2) { // 允许最多两次跳跃（地面一次，空中一次）
@@ -70,14 +75,18 @@ function createCactus() {
             dinoRect.left < cactusRect.right &&
             dinoRect.bottom > cactusRect.top
         ) {
-            gameOver();
+            endGame();
             return;
         }
         
-        requestAnimationFrame(moveCactus);
+        if (!gameOver) {
+            requestAnimationFrame(moveCactus);
+        }
     }
     
-    requestAnimationFrame(moveCactus);
+    if (!gameOver) {
+        requestAnimationFrame(moveCactus);
+    }
 }
 
 function updateScore() {
@@ -85,9 +94,26 @@ function updateScore() {
     scoreDisplay.textContent = score;
 }
 
-function gameOver() {
-    clearInterval(gameLoop);
-    document.body.innerHTML = `<h1>游戏结束! 得分: ${score}</h1>`;
+function endGame() {
+    gameOver = true;
+    cancelAnimationFrame(animationId);
+
+    // 设置 canvas 大小为游戏容器的大小
+    canvas.width = gameContainer.clientWidth;
+    canvas.height = gameContainer.clientHeight;
+    gameContainer.appendChild(canvas);
+
+    // 绘制半透明背景
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 绘制游戏结束文本
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("游戏结束", canvas.width / 2, canvas.height / 2);
+    ctx.font = "20px Arial";
+    ctx.fillText("点击屏幕重新开始", canvas.width / 2, canvas.height / 2 + 40);
 }
 
 document.addEventListener('keydown', (event) => {
@@ -99,24 +125,52 @@ document.addEventListener('keydown', (event) => {
 
 // 添加点击事件监听器
 document.addEventListener('click', () => {
-    jump();
+    if (gameOver) {
+        resetGame();
+    } else {
+        jump();
+    }
 });
+
+function resetGame() {
+    // 移除 canvas
+    if (gameContainer.contains(canvas)) {
+        gameContainer.removeChild(canvas);
+    }
+
+    // 重置游戏状态
+    gameOver = false;
+    score = 0;
+    scoreDisplay.textContent = score;
+    position = 10;
+    velocity = 0;
+    jumpCount = 0;
+    isJumping = false;
+
+    // 移除所有现有的仙人掌
+    const cacti = document.querySelectorAll('.cactus');
+    cacti.forEach(cactus => cactus.remove());
+
+    // 重新开始游戏
+    startGame();
+}
 
 function startGame() {
     score = 0;
     scoreDisplay.textContent = score;
+    gameOver = false;
     
     function spawnCactus() {
-        createCactus();
-        // 随机设置下一个仙人掌的出现时间，范围在1000ms到2000ms之间
-        const nextSpawnTime = Math.random() * 1000 + 1000;
-        setTimeout(spawnCactus, nextSpawnTime);
+        if (!gameOver) {
+            createCactus();
+            // 增加间隔时间，范围在2000ms到4000ms之间
+            const nextSpawnTime = Math.random() * 1000 + 1000;
+            setTimeout(spawnCactus, nextSpawnTime);
+        }
     }
     
-    spawnCactus();
-    
-    // 移除这一行，如果它存在的话
-    // gameLoop = setInterval(updateScore, gameSpeed);
+    // 延迟开始生成仙人掌，给玩家一些准备时间
+    setTimeout(spawnCactus, 1000);
 }
 
 startGame();
