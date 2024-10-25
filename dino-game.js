@@ -1,6 +1,7 @@
 const dino = document.getElementById('dino');
 const gameContainer = document.getElementById('game-container');
 const scoreDisplay = document.getElementById('score');
+let gameInstructions;
 
 let isJumping = false;
 let jumpCount = 0;
@@ -184,6 +185,9 @@ function resetGame() {
 
     // 重新开始游戏
     startGame();
+
+    // 重新显示游戏说明
+    setGameInstructions();
 }
 
 let spawnInterval;
@@ -209,6 +213,9 @@ function startGame() {
     
     // 延迟开始生成仙人掌，给玩家一些准备时间
     spawnInterval = setTimeout(spawnCactus, 1000);
+
+    // 设置游戏说明
+    setGameInstructions();
 }
 
 startGame();
@@ -219,3 +226,31 @@ function resetDinoSize() {
     currentDinoWidth = initialDinoWidth;
     currentDinoHeight = initialDinoHeight;
 }
+
+// 创建并添加游戏说明元素的函数
+function createGameInstructions() {
+    gameInstructions = document.createElement('div');
+    gameInstructions.id = 'game-instructions';
+    gameInstructions.style.position = 'absolute';
+    gameInstructions.style.bottom = '150px'; // 将底部位置从 10px 改为 -50px
+    gameInstructions.style.left = '0';
+    gameInstructions.style.width = '100%';
+    gameInstructions.style.textAlign = 'center';
+    gameInstructions.style.color = 'yellow';
+    gameInstructions.style.fontSize = '14px';
+    gameContainer.appendChild(gameInstructions);
+}
+
+// 设置游戏说明文本的函数
+function setGameInstructions() {
+    if (!gameInstructions) {
+        createGameInstructions();
+    }
+    gameInstructions.textContent = '玩法提示：单击画面跳1次，双击画面跳2次，每次得分增加恐龙尺寸';
+}
+
+// 在页面加载完成后创建并设置游戏说明
+document.addEventListener('DOMContentLoaded', () => {
+    createGameInstructions();
+    setGameInstructions();
+});
