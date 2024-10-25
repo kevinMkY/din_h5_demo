@@ -3,33 +3,41 @@ const gameContainer = document.getElementById('game-container');
 const scoreDisplay = document.getElementById('score');
 
 let isJumping = false;
+let jumpCount = 0;
+let position = 10;
+let velocity = 0;
+const gravity = 0.6;
+const initialJumpVelocity = 12;
 let score = 0;
 let gameSpeed = 42; // 原来是60，加快30%
 let gameLoop;
 
 function jump() {
-    if (isJumping) return;
+    if (jumpCount < 2) { // 允许最多两次跳跃（地面一次，空中一次）
+        velocity = initialJumpVelocity;
+        jumpCount++;
+    }
     
-    let position = 10;
-    let velocity = 8;
-    let gravity = 0.2;
-    isJumping = true;
+    if (!isJumping) {
+        isJumping = true;
+        requestAnimationFrame(jumpAnimation);
+    }
+}
+
+function jumpAnimation() {
+    velocity -= gravity;
+    position += velocity;
     
-    function jumpAnimation() {
-        velocity -= gravity;
-        position += velocity;
-        
-        if (position <= 10) {
-            position = 10;
-            isJumping = false;
-            return;
-        }
-        
-        dino.style.bottom = position + 'px';
+    if (position <= 10) {
+        position = 10;
+        isJumping = false;
+        jumpCount = 0; // 重置跳跃次数
+        velocity = 0;
+    } else {
         requestAnimationFrame(jumpAnimation);
     }
     
-    requestAnimationFrame(jumpAnimation);
+    dino.style.bottom = position + 'px';
 }
 
 function createCactus() {
@@ -84,6 +92,7 @@ function gameOver() {
 
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space') {
+        event.preventDefault(); // 防止空格键滚动页面
         jump();
     }
 });
@@ -94,14 +103,15 @@ function startGame() {
     
     function spawnCactus() {
         createCactus();
-        // 将时间范围从 2000ms-4000ms 缩短到 667ms-1333ms (大约是原来的1/3)
-        const nextSpawnTime = Math.random() * 667 + 667;
+        // 随机设置下一个仙人掌的出现时间，范围在1000ms到2000ms之间
+        const nextSpawnTime = Math.random() * 1000 + 1000;
         setTimeout(spawnCactus, nextSpawnTime);
     }
     
     spawnCactus();
     
-    gameLoop = setInterval(updateScore, gameSpeed);
+    // 移除这一行，如果它存在的话
+    // gameLoop = setInterval(updateScore, gameSpeed);
 }
 
 startGame();
