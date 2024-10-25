@@ -13,6 +13,12 @@ let gameSpeed = 42; // 原来是60，加快30%
 let gameLoop;
 let gameOver = false;
 
+// 在文件顶部添加这些变量
+const initialDinoWidth = 60;  // 假设初始宽度为60px
+const initialDinoHeight = 60; // 假设初始高度为60px
+let currentDinoWidth = initialDinoWidth;
+let currentDinoHeight = initialDinoHeight;
+
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 let animationId;
@@ -92,11 +98,30 @@ function createCactus() {
 function updateScore() {
     score++;
     scoreDisplay.textContent = score;
+    
+    // 每次得分增加恐龙尺寸
+    updateDinoSize();
+
+    // 每隔10分，稍微增加难度
+    if (score % 10 === 0 && minSpawnTime > 1000) {
+        minSpawnTime -= 100;
+        maxSpawnTime -= 100;
+    }
+}
+
+function updateDinoSize() {
+    currentDinoWidth+=3;
+    currentDinoHeight+=3;
+    dino.style.width = `${currentDinoWidth}px`;
+    dino.style.height = `${currentDinoHeight}px`;
 }
 
 function endGame() {
     gameOver = true;
     cancelAnimationFrame(animationId);
+
+    // 重置恐龙尺寸
+    resetDinoSize();
 
     // 设置 canvas 大小为游戏容器的大小
     canvas.width = gameContainer.clientWidth;
@@ -151,6 +176,12 @@ function resetGame() {
     const cacti = document.querySelectorAll('.cactus');
     cacti.forEach(cactus => cactus.remove());
 
+    // 重置恐龙尺寸
+    resetDinoSize();
+
+    // 清除之前的定时器
+    clearTimeout(spawnInterval);
+
     // 重新开始游戏
     startGame();
 }
@@ -181,3 +212,10 @@ function startGame() {
 }
 
 startGame();
+
+function resetDinoSize() {
+    dino.style.width = '';  // 移除内联样式，恢复到 CSS 定义的尺寸
+    dino.style.height = ''; // 移除内联样式，恢复到 CSS 定义的尺寸
+    currentDinoWidth = initialDinoWidth;
+    currentDinoHeight = initialDinoHeight;
+}
