@@ -97,6 +97,11 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+// 添加点击事件监听器
+document.addEventListener('click', () => {
+    jump();
+});
+
 function startGame() {
     score = 0;
     scoreDisplay.textContent = score;
