@@ -155,6 +155,10 @@ function resetGame() {
     startGame();
 }
 
+let spawnInterval;
+let minSpawnTime = 1000;
+let maxSpawnTime = 3000;
+
 function startGame() {
     score = 0;
     scoreDisplay.textContent = score;
@@ -164,13 +168,16 @@ function startGame() {
         if (!gameOver) {
             createCactus();
             // 增加间隔时间，范围在2000ms到4000ms之间
-            const nextSpawnTime = Math.random() * 1000 + 1000;
-            setTimeout(spawnCactus, nextSpawnTime);
+            const nextSpawnTime = Math.random() * (maxSpawnTime - minSpawnTime) + minSpawnTime;
+            spawnInterval = setTimeout(spawnCactus, nextSpawnTime);
         }
     }
     
+    // 清除之前的定时器（如果有的话）
+    clearTimeout(spawnInterval);
+    
     // 延迟开始生成仙人掌，给玩家一些准备时间
-    setTimeout(spawnCactus, 1000);
+    spawnInterval = setTimeout(spawnCactus, 1000);
 }
 
 startGame();
