@@ -232,7 +232,7 @@ function createGameInstructions() {
     gameInstructions = document.createElement('div');
     gameInstructions.id = 'game-instructions';
     gameInstructions.style.position = 'absolute';
-    gameInstructions.style.bottom = '150px'; // 将底部位置从 10px 改为 -50px
+    gameInstructions.style.bottom = '130px'; // 将底部位置从 10px 改为 -50px
     gameInstructions.style.left = '0';
     gameInstructions.style.width = '100%';
     gameInstructions.style.textAlign = 'center';
